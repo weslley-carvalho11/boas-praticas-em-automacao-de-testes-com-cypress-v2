@@ -1,0 +1,1 @@
+# boas-praticas-em-automacao-de-testes-com-cypress-v2
