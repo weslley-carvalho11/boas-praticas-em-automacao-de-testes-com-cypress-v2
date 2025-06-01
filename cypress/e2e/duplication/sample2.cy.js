@@ -9,23 +9,18 @@ describe('Code duplication bad practice - repetitive tests', () => {
     cy.wait('@getStories')
   })
 
-  const terms = [
-    {
-      search: "reactjs"
-    },
-    {
-      search: "vuejs"
-    }
-  ]
+  const terms = ['reactjs', 'vuejs', 'angularjs']
 
-  it('searches for "reactjs"', () => {
-    terms.forEach(terms =>{
-      cy.search(terms.search)
+
+  terms.forEach(terms => {
+    it(`searches for "${terms}"`, () => {
+      cy.search(terms)
+      cy.wait('@getStories')
+
+      cy.get('.table-row')
+        .should('have.length', 100)
     })
 
-    cy.wait('@getStories')
 
-    cy.get('.table-row')
-      .should('have.length', 100)
   })
 })
