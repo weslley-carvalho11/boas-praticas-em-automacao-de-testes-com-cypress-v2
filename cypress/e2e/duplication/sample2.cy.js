@@ -11,7 +11,6 @@ describe('Code duplication bad practice - repetitive tests', () => {
 
   const terms = ['reactjs', 'vuejs', 'angularjs']
 
-
   terms.forEach(terms => {
     it(`searches for "${terms}"`, () => {
       cy.search(terms)
@@ -20,7 +19,6 @@ describe('Code duplication bad practice - repetitive tests', () => {
       cy.get('.table-row')
         .should('have.length', 100)
     })
-
-
   })
+  
 })

@@ -173,6 +173,36 @@ describe('Code duplication bad practice - repetitive tests', () => {
   })
   -> Criando uma iteração com "forEach" no qual ele irá percorrer o array chamado de "terms";
   -> Dentro da iteração coloquei o teste, para que a cada iteração ele faça o teste com valor diferente.
+
+
+Sample3.cy.js
+describe('Code duplication bad practice - repetitive actions and assertions', () => {
+  beforeEach(() => {
+    cy.intercept(
+      'GET',
+      '**/search**'
+    ).as('getStories')
+
+    cy.visit('https://hackernews-seven.vercel.app')
+    cy.wait('@getStories')
+  })
+
+  it('searches for the same term 3 times', () => {
+    Cypress._.times(3, () => {
+      cy.search('cypress.io')
+
+      cy.get('.table-row')
+        .its('length')
+        .should('be.at.least', 1)
+    })
+  })
+
+})
+-> _times() é de uma biblioteca chamada de lowdash;
+-> Essa biblioteca vem enpacota com o cypress; 
+-> "._.times()" recebe dois parâmetros, a quantidade de vezes que você quer repetir o código que está dentro 
+dele e uma função de callback; 
+
 })
 
 --------------------------------------------------------------------------------------------------
@@ -184,7 +214,9 @@ Boas Práticas
 aplicação.
 -> Centralizar os valores em array de objetos dentro do arquivo spec, mas a melhor prática é criar um 
 arquivo ".json" ou ".js" dentro da pasta "fixtures". 
--> 
+-> Quando houver vários valores podemos adicionalos a um array e usar do forEach para não ter 
+que repetir o código;
+-> Usar da Biblioteca de Lowdash e usar o comando de ".time()" para repetir o código.
 
 --------------------------------------------------------------------------------------------------
 Más Práticas
