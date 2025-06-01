@@ -1,0 +1,172 @@
+--------------------------------------------------------------------------------------------------
+Arquivos
+--------------------------------------------------------------------------------------------------
+package.json
+-> Na sua estrutura ele contém o "devDependencies" no qual possui o cypress (framework) e faker.js (biblioteca), 
+ao entrar na pasta do projeto no cmd e executar o comando npm i ele instala todo o que está em "devDependencies". 
+
+--------------------------------------------------------------------------------------------------
+Anotação
+--------------------------------------------------------------------------------------------------
+Multiplos navegadores
+-> https://docs.cypress.io/app/references/trade-offs#Multiple-tabs
+-> resumo: 
+    -> O Cypress é executado dentro do navegador.
+    -> O Cypress não suporta testes em vários navegadores ao mesmo tempo mas tem plugin chamado de 
+    "@cypress/puppeteer" para usar várias abas. 
+
+
+O que fazer antes de refatorar o código?
+-> É importante é rodar os testes antes de iniciar a refatoração de código, pois saberemos o que está ou não  
+funcioando.
+-> Verificar quais os testes fazem sentido remover ou manter. 
+
+
+--------------------------------------------------------------------------------------------------
+Comandos CMD
+--------------------------------------------------------------------------------------------------
+npm i cypress@latest -D 
+-> Instala a última versão do cypress;
+
+--------------------------------------------------------------------------------------------------
+Comandos Cypress
+--------------------------------------------------------------------------------------------------
+cy.context('Cenários separados por contexto', () => {
+    it('teste', () => {
+
+    })
+})
+-> É básicamente um comando que exibe "sub-título", podemos separar os testes que são feitos para 
+exibir erros por exemplo. 
+
+--------------------------------------------------------------------------------------------------
+Detalhamento
+--------------------------------------------------------------------------------------------------
+Cypress.Commands.add('nomeDoComandoCustomizado', function(fieldsVals = {}) {
+    //Comando customizado
+})
+-> O Comando customizado recebe um objeto como parâmentro vazio por isso foi adicionado "= {}" depois 
+do objeto "fieldsVals". 
+
+
+Cypress.Commands.add('nomeDoComandoCustomizado', function(fieldsVals = {}) {
+    const {
+        firstname: 'João',
+        lastname: 'Souza',
+        email: 'jsouza@email.com',
+        opentext: '',
+    } = fieldsVals
+
+    cy,get('#firstname').type('firstname')
+})
+-> Ao desestruturar o objeto não precisamos repetir o nome do objeto
+-> No arquivo SPEC podemos passar todos os valores do objeto, ou apenas um deles, por exemplo ao usar 
+o comando customizado no arquivo SPEC posso criar um objeto que possui o valor email. Exemplo abaixo:
+
+it ('teste de exemplo', () => {
+    const invalidEmailFormat = {
+        email: jsouza#email.com
+    }
+
+    cy.nomeDoComandoCustomizado('invalidEmailFormat')
+})
+
+
+
+const videos = [
+    {
+        title: "Título do vídeo",
+        description: "Descrição do vídeo",
+        url: "https://google.com/video"
+    },
+    {
+        title: "Título do vídeo 2",
+        description: "Descrição do vídeo 2",
+        url: "https://google.com/video2"
+    }
+];
+
+it('Criar vídeos', => () {
+    videos.forEach(video => {
+        createVideo(video);
+    });
+})
+
+funtion createVideo (video) {
+    //criacão de vídeo
+}
+
+-> Primeiro criamos um array de objetos, que permitirá usar vários valores. Podemos criar uma constante 
+ou centralizar isso em um arquivo. 
+-> No teste criar um "forEach" que irá passar por todos os objetos do array chamada de "video" criada mais 
+a cima. 
+-> Podemos criar um função dentro do proprio arquivo spec antes de passar ele para o comando customizado. 
+
+context('contexto', () => {
+    beforeEach(() => cy.visit('https://google.com'))
+
+    it('teste', => {
+        //teste
+    })
+})
+-> Podemos adicionar um "beforeEach" que só é executado dentro de um contexto de teste.
+-> A vantagem é que se houve outros testes dentro desse contexto todos ele irão execultar o beforeEach.
+
+
+const data = require('.../fixtures/data.json') //Pega o array de objetos json 
+
+data.forEach((item, index) => {
+    it(`${index + 1}`, () => {
+        cy.get('#name').type('item.first')
+        cy.get('#last-name').type('item.lastName')
+    })
+})
+-> É criado uma constante na qual recebe um arry de objetos de arquivo ".json" dentro de "fixtures".
+-> Criamos uma iteração com o ".forEach".
+-> Podemos usar o template literals no título do teste.
+-> O que "Template Literals"? Através do "${}" conseguimos fazer interpolação de strings, ou seja, usar 
+variáveis e expressões. 
+
+
+Cypress._.times(5, () => {
+  it.only("submete o formulário com sucesso", () => {
+    const customer = {
+      firstName: "João",
+      lastName: "Silva",
+      email: "joaosilva@example.com"
+    };
+
+    cy.fillMandatoryFields(customer);
+    cy.contains("Enviar").click();
+
+    cy.get(".success p").should("contain", "Formulário submetido com sucesso.");
+  });
+});
+
+-> Ao baixar o Cypress ele empacota uma biblioteca chamada de lodash.
+-> No qual recebe como parâmetro uma função a quantidade de vezes que ele será executado e uma função de 
+callback que dentro dela será inserido o teste.
+
+--------------------------------------------------------------------------------------------------
+Boas Práticas
+--------------------------------------------------------------------------------------------------
+-> Fazer refatoração em "baby step", ou seja, mudar uma coisa por vez.
+-> Identificar a dublicação de código e centralizar ele em uma unica função. 
+-> Ir direto na página onde ele deve executar a tarefa ao invés de clicar em botões para navegar na 
+aplicação.
+-> Centralizar os valores em array de objetos dentro do arquivo spec, mas a melhor prática é criar um 
+arquivo ".json" ou ".js" dentro da pasta "fixtures". 
+-> 
+
+--------------------------------------------------------------------------------------------------
+Más Práticas
+--------------------------------------------------------------------------------------------------
+Browser Testing
+-> Ao invés de testar a aplicação acabamos testando o Browser e seu comportamento, como há um padrão 
+no desenvolvimento de apliicações e funcionamento dos navegadores, não há o que se preocupar com isso.
+Existe um geito mais inteligênte de testar isso como conferir o direcionamento do "href", e conferir se 
+o atributo "target" possui o valor "_blank". 
+
+Duplicação de código
+-> Quando o código está duplicado e precisamos por algum motivo modificá-lo, temos que fazer isso em 
+vários lugares diferentes, se centralizarmos tudo em único lugar preciaremos editar apenas um lugar.
