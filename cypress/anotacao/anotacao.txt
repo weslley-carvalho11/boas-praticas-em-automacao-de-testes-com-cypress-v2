@@ -21,7 +21,27 @@ O que fazer antes de refatorar o código?
 funcioando.
 -> Verificar quais os testes fazem sentido remover ou manter. 
 
+O que significa o termo "Não Determinístico"? 
+-> Na ciência da computação, refere-se a algo que pode se comportar de forma diferentes em diferente execuções, 
+mesmo com a(s) mesma(s) entrada(s). 
 
+O que significa o termo "Determinístico"? 
+-> Refere-se a algo que possui o mesmo comportamento em diferentes execuções com as mesma(s) entrada(s).
+
+Quais os motivos podem gerar um "flaky test"?
+-> Depender de comportamentos não determinístico ou não definidos;
+-> Código frágil próprio ou de terceiros; 
+-> Problemas de infraestrutura; 
+
+O que é "Dry" (Don't repeat yourself)?
+-> É um pricípio de desenvolvimento de software que visa reduzir a repetição de informações que mudarão. 
+-> Criado por Andy Hunt
+
+O que encapsulamento? 
+É um conceito na programação orientada a objetos no qual agrupa dados e métodos em uma unidade, por exemplo 
+uma classe;
+
+-> Qual a diferença entre argumento e parâmetro?
 --------------------------------------------------------------------------------------------------
 Comandos CMD
 --------------------------------------------------------------------------------------------------
@@ -203,7 +223,15 @@ describe('Code duplication bad practice - repetitive actions and assertions', ()
 -> "._.times()" recebe dois parâmetros, a quantidade de vezes que você quer repetir o código que está dentro 
 dele e uma função de callback; 
 
+
 })
+
+cy.intercept('GET', '**/notes')
+cy.intercept('GET', "**/search**", { fixture: 'stories.json'}).as('getResponse')
+-> Podemos usar um arquivo ".json" na pasta de fixtures ;
+-> Quando ele fazer a busca ele irá exibir as informações do arquivo ".json";
+-> Você consegue desaclopar a front da API;
+-> Estamos mockando a resposta; 
 
 --------------------------------------------------------------------------------------------------
 Boas Práticas
@@ -217,6 +245,27 @@ arquivo ".json" ou ".js" dentro da pasta "fixtures".
 -> Quando houver vários valores podemos adicionalos a um array e usar do forEach para não ter 
 que repetir o código;
 -> Usar da Biblioteca de Lowdash e usar o comando de ".time()" para repetir o código.
+-> Ao encontrar testes flaky, devemos colocá-los em quarentena para investigarmos e deixarmos os testes
+mais robustos. 
+-> Ao deixar o teste em quarentena evitamos falsos negativos nos testes; 
+-> Uma forma de identificar se um teste é flaky é executando o teste várias vezes;
+-> Criar testes o mais independetes do outro. 
+-> Fazer Smoke Test antes de iniciar os testes, afim de garatir que tudo está funcionado da forma correta;
+-> É uma melhor opção investir em teste de unidade e integração do em testes e2e, por serem mais rápidos e2e
+e por testarem um escopo menor de código; 
+-> Podemos criar testes e2e mais robustos executando testes em paralelo e implementando boas práticas de 
+desenvolvimento de teste; 
+-> Uma forma de evitar testes determinísticos é garantindo que massa de dados seja inserida antes dos testes,
+por exemplo executando scripts de banco de dados; 
+-> Utilizar waits para garantir que elemento está disponível antes de continuar os testes; 
+-> Usar identificadores únicos para garantir que o teste irá interagir com o elemento correto;
+-> Usar Page Objects para tornar os testes independetes, sem redudância de código, além de facilitar 
+a manutenção do código. 
+-> Não teste tudo atráves da GUI, dependo do teste é melhor fazer isso na forma de teste unitário ou 
+regressão; 
+-> Os testes devem conseguir rodar os testes em qualquer ambiente, seja o ambiente de teste, homologação 
+ou produção; 
+
 
 --------------------------------------------------------------------------------------------------
 Más Práticas
