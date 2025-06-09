@@ -226,6 +226,7 @@ dele e uma função de callback;
 
 })
 
+
 cy.intercept('GET', '**/notes')
 cy.intercept('GET', "**/search**", { fixture: 'stories.json'}).as('getResponse')
 -> Podemos usar um arquivo ".json" na pasta de fixtures ;
@@ -233,6 +234,35 @@ cy.intercept('GET', "**/search**", { fixture: 'stories.json'}).as('getResponse')
 -> Você consegue desaclopar a front da API;
 -> Estamos mockando a resposta; 
 
+hardcoded-assertions/sample.cy.js
+ it('searches', () => {
+    cy.fixture('stories.json')
+      .then(({ hits }) => {
+        cy.search('cypress.io')
+        cy.wait('@getStories')
+
+        cy.get('.table-row')
+          .as('tableRows')
+          .should('have.length', hits.length)
+
+        hits.forEach((hit, index) => {
+          cy.get('@tableRows')
+            .eq(index)
+            .should('contain', hit.title)
+        })
+      })
+  })
+  -> cy.fixture() com esse comando conseguimos usar dados localizados em arquivo. 
+  -> .then() recebeu uma função de callback, e hits para ser desestruturado;
+  -> cy.search() é o comando customizado no qual faz todos os comandos para realizar uma busca;
+  -> Já que "hits" é uma lista, podemos usar o .lenght para conseguir o tamanho da lista, assim conseguimos pegar o tamanho dos valores dinamicamente; 
+  -> hits.forEach(hit, index) => {.
+          cy.get('@tableRows') -> Pega o alias definido 
+            .eq(index) -> usa o index percorrido
+            .should('contain', hit.title) -> Pega a informação de títulos de todos os objetos na lista de hits; 
+  }
+  -> Podemos fazer essa desetruturação logo no início do arquivo com o seguinte comando:
+  -> const {hits} = require('../../caminhoDaPasta/arquivo')
 --------------------------------------------------------------------------------------------------
 Boas Práticas
 --------------------------------------------------------------------------------------------------
@@ -265,6 +295,8 @@ a manutenção do código.
 regressão; 
 -> Os testes devem conseguir rodar os testes em qualquer ambiente, seja o ambiente de teste, homologação 
 ou produção; 
+-> Evitar que as verificações sejam hardcoded, pois isso pode gerar erros na verificações;
+-> fazer o código mais simples possível; 
 
 
 --------------------------------------------------------------------------------------------------
@@ -279,3 +311,4 @@ o atributo "target" possui o valor "_blank".
 Duplicação de código
 -> Quando o código está duplicado e precisamos por algum motivo modificá-lo, temos que fazer isso em 
 vários lugares diferentes, se centralizarmos tudo em único lugar preciaremos editar apenas um lugar.
+-> Complexidade desnecessária 
