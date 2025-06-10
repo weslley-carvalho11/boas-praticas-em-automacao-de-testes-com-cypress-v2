@@ -17,3 +17,14 @@ Cypress.Commands.add('randomlyTogglePurchaseAgreement', () => {
       .click()
   }
 })
+
+Cypress.Commands.add('updateDestination', (info) => {
+      cy.get('#destination_name')
+      .clear()
+      .type(info.name)
+    cy.get('#destination_description')
+      .clear()
+      .type(info.description)
+    cy.get('input[type="submit"]')
+      .click()
+})
