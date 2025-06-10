@@ -297,6 +297,9 @@ regressão;
 ou produção; 
 -> Evitar que as verificações sejam hardcoded, pois isso pode gerar erros na verificações;
 -> fazer o código mais simples possível; 
+-> Para dados sensíveis como e-mail e senha colocamos eles no arquivo chamado de cypress.env.json na raiz do projeto. 
+-> Centralizamos a senha no arquivo e adicionamos ele no arquivo de .gitignore para que arquivo não vá para o repositório 
+-> Adicionamos também ao comando que escreve a senha {log: false} assim no momento de execução a senha digitada fica oculta 
 
 
 --------------------------------------------------------------------------------------------------
